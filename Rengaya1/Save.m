@@ -35,7 +35,6 @@
 
     [self fileNames];
     [self save];
-    [self create];
     
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     if ([ud integerForKey:@"NUMBER"] == 0) {
@@ -44,6 +43,9 @@
         fileNumber = [ud integerForKey:@"NUMBER"] + 1;
     }
     NSLog(@"filenumber%d",fileNumber);
+    
+    [self create];
+
 }
 
 //Canvasから画像データを受け取る
@@ -173,11 +175,9 @@
     //filenameの初期化
     [ud setInteger:fileNumber forKey:@"NUMBER"];
     fileNumber = [ud integerForKey:@"NUMBER"];
-    
     [ud synchronize];
         
-    fileNumber++;
-
+    NSLog(@"filenimmmmm%d", fileNumber);
     componentName = [NSString stringWithFormat:@"image%d.png", fileNumber];
     fileNumberStr = [NSString stringWithFormat:@"%d", fileNumber];
     
@@ -189,6 +189,11 @@
     [imageData writeToFile:filePath atomically:YES];
     [imageArray addObject:imageData];
 
+    fileNumber++;
+    //プラスした数字を格納
+    [ud setInteger:fileNumber forKey:@"NUMBER"];
+
+    
     return imageArray;
 }
 
