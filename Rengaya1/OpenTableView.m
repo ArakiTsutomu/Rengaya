@@ -33,30 +33,34 @@
         ud = [NSUserDefaults standardUserDefaults];
     }
     
-    stringArray = [[NSMutableArray alloc] init];
-    NSData *receivedData = [ud objectForKey:@"ARRAY"];
-    stringArray = [NSKeyedUnarchiver unarchiveObjectWithData:receivedData];
-    
-    title = [ud stringForKey:@"TITLE"];
-    NSLog(@"deli%@", title);
-    stringArray = [ud objectForKey:@"ARRAY"];
-    [stringArray addObject:title];
+    stringArray = [NSMutableArray array];
+//    [stringArray addObject:@"こんにちは"];
+//    [stringArray addObject:@"今晩輪"];
+//    [ud setObject:stringArray forKey:@"ARRAY"];
+//    NSLog(@"string%@", [ud arrayForKey:@"ARRAY"]);
+    array = [ud arrayForKey:@"ARRAY"];
     NSLog(@"array%@", stringArray);
+    title = [ud objectForKey:@"TITLE"];
+    NSLog(@"%@", title);
+    [stringArray addObjectsFromArray:array];
 
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:stringArray];
-    [ud setObject:data forKey:@"ARRAY"];
-
-//    if (![stringArray containsObject:title]) {
-//    
-//    }
+    if (![stringArray containsObject:title]) {
+        [stringArray addObject:title];
+        [ud setObject:stringArray forKey:@"ARRAY"];
+    }
+    
+    NSLog(@"%@", [ud objectForKey:@"ARRAY"]);
         
+    
+    
+    
 
             
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
 }
 
@@ -103,19 +107,22 @@
 }
 */
 
-/*
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
+        
+        [stringArray removeObjectAtIndex:indexPath.row];
+        [ud setObject:stringArray forKey:@"ARRAY"];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }   
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
-*/
+
 
 /*
 // Override to support rearranging the table view.

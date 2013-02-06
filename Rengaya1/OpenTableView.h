@@ -13,6 +13,7 @@
     NSMutableArray *stringArray;
     NSUserDefaults *ud;
     NSString *title;
+    NSArray *array;
 }
 
 @end
