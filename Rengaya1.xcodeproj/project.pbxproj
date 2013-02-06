@@ -20,6 +20,7 @@
 		4D9833BE16A6EA1500F0D512 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D9833BD16A6EA1500F0D512 /* ViewController.m */; };
 		4DA0AAE216A80CA500338374 /* Setting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DA0AAE016A80CA500338374 /* Setting.m */; };
 		4DA0AAE716A8484200338374 /* Save.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DA0AAE616A8484200338374 /* Save.m */; };
+		4DA2044F16C16CA100440E9F /* OpenTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DA2044E16C16CA100440E9F /* OpenTableView.m */; };
 		4DE7265016AAEDAE0093D419 /* Canvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE7264F16AAEDAD0093D419 /* Canvas.m */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,8 @@
 		4DA0AAE016A80CA500338374 /* Setting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Setting.m; sourceTree = "<group>"; };
 		4DA0AAE516A8484200338374 /* Save.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Save.h; sourceTree = "<group>"; };
 		4DA0AAE616A8484200338374 /* Save.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Save.m; sourceTree = "<group>"; };
+		4DA2044D16C16CA100440E9F /* OpenTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenTableView.h; sourceTree = "<group>"; };
+		4DA2044E16C16CA100440E9F /* OpenTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenTableView.m; sourceTree = "<group>"; };
 		4DE7263916AAE7BA0093D419 /* MyTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyTableViewController.h; sourceTree = "<group>"; };
 		4DE7263A16AAE7BA0093D419 /* MyTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyTableViewController.m; sourceTree = "<group>"; };
 		4DE7263B16AAE7BA0093D419 /* MyTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTableViewController.xib; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 				4DA0AAE016A80CA500338374 /* Setting.m */,
 				4DA0AAE516A8484200338374 /* Save.h */,
 				4DA0AAE616A8484200338374 /* Save.m */,
+				4DA2044D16C16CA100440E9F /* OpenTableView.h */,
+				4DA2044E16C16CA100440E9F /* OpenTableView.m */,
 			);
 			name = Setting;
 			sourceTree = "<group>";
@@ -266,6 +271,7 @@
 				4DA0AAE216A80CA500338374 /* Setting.m in Sources */,
 				4DA0AAE716A8484200338374 /* Save.m in Sources */,
 				4DE7265016AAEDAE0093D419 /* Canvas.m in Sources */,
+				4DA2044F16C16CA100440E9F /* OpenTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

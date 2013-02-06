@@ -12,25 +12,16 @@
 {
     UIImageView *canvasImageView;
     CGPoint touchPoint;
-    NSData *imageData;
     
-    //ドキュメントのパス
-    NSArray *paths;
-    NSString *filePath;
-    NSString *imageDir;
-    
-    NSInteger fileNumber;
-    NSString *componentName;
-    NSMutableArray *animArray;
-    NSString *fileNumberStr;
-    NSData *reData;
-    UIImageView *animView;
-    UIImage *image;
-    
+    NSMutableArray *lineContainer;
+    NSMutableArray *line;
 }
 
-@property UIImageView *canvasImageView;
 
--(UIImage*)createImage;
+- (UIImage*)createImage;
+- (void)undoLine;
+-(void)createImageView;
+
+@property UIImageView *canvasImageView;
 
 @end

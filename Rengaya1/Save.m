@@ -8,13 +8,15 @@
 
 #import "Save.h"
 #import "Canvas.h"
+#import "Setting.h"
+#import "OpenTableView.h"
 
 @interface Save ()
+
 
 @end
 
 @implementation Save
-
 
 - (id)initWithStyle:(UITableViewStyle)style selectedIndexPath:(NSIndexPath *)selectedIndexPath
 {
@@ -23,6 +25,8 @@
         settingIndexPath = selectedIndexPath;
         documents = [[NSMutableArray alloc] init];
         canvas = [[Canvas alloc] init];
+        stringArray = [[NSMutableArray alloc] init];
+        
     }
     return self;
 }
@@ -30,13 +34,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    canvas = [[Canvas alloc] init];
-    [canvas createImage];
-
     [self fileNames];
-    [self save];
     
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    if (!stringArray) {
+        stringArray = [[NSMutableArray alloc] init];
+    }
+    
+    self.tableView.delegate = self;
+    
+    if (ud == NULL) {
+        ud = [NSUserDefaults standardUserDefaults];
+    }
+        
     if ([ud integerForKey:@"NUMBER"] == 0) {
         fileNumber = 0;
     }else{
@@ -44,8 +53,6 @@
     }
     NSLog(@"filenumber%d",fileNumber);
     
-    [self create];
-
 }
 
 //Canvasから画像データを受け取る
@@ -53,35 +60,21 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-    }
+}
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    if (settingIndexPath.section == 0) {
-        if (settingIndexPath.row == 0) {
-            return 0;
-        }else if(settingIndexPath.row == 1){
-            //保存のセル
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
-            return 1;
-        }
-    }else if (settingIndexPath.section == 1){
-        if (settingIndexPath.row == 0) {
-            return 0;
-        }
-    }
-    return 0;
+    return 1;
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
     return 1;
 }
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -90,22 +83,18 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-            if (settingIndexPath.section == 0) {
-                if (settingIndexPath.row == 0) {
-                    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 250, 30)];
-                    [lbl setText:@"てきすと"];
-                    [cell.contentView addSubview:lbl];
-                }else if (settingIndexPath.row == 1){
+            if (indexPath.section == 0) {
+                if (indexPath.row == 0) {
                     //保存画面
                     titleTextField = [[UITextField alloc] initWithFrame:CGRectMake(20, 10, 250, 30)];
                     titleTextField.returnKeyType = UIReturnKeyDone;
                     titleTextField.delegate = self;
                     [cell.contentView addSubview:titleTextField];
-//                    NSString *titleStr = titleTextField.text;
-//                    filename = [NSString stringWithFormat:@"%@",titleStr];
+                    
+                    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
                 }
             }
-    }
+        }
     return cell;
 }
 
@@ -115,10 +104,14 @@
     return YES;
 }
 
--(NSString*)save
+-(void)save
 {
     NSString *titleStr = titleTextField.text;
     filename = [NSString stringWithFormat:@"%@",titleStr];
+    
+    ud = [NSUserDefaults standardUserDefaults];
+    [ud setObject:filename forKey:@"TITLE"];
+    title = [ud stringForKey:@"TITLE"];
     
     //  Documetsディレクトリのパス取り出し。
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -127,10 +120,21 @@
     //   Documets/imagesディレクトリのパス作成。
     imageDir = [documentsDirectory stringByAppendingPathComponent:filename];
     NSError* error = nil;
-
     
     //  Documets/imagesディレクトリ作成。2回目以降は意味の無い作業。
     [[NSFileManager defaultManager] createDirectoryAtPath:imageDir withIntermediateDirectories:YES attributes:nil error:&error];
+    
+    
+    
+    [self create];
+    
+//    [stringArray addObject:title];
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:stringArray.count inSection:0];
+//    NSArray *indexPaths = [NSArray arrayWithObjects:indexPath,nil];
+//    [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+//    
+
+    
     
     /*
      TitleTextField.textのフォルダの中にaaaaというフォルダが出来る。
@@ -153,7 +157,6 @@
 //    componentName = [NSString stringWithFormat:@"image%d.png", fileNumber];
 //    fileNumberStr = [NSString stringWithFormat:@"%d", fileNumber];
     
-    return imageDir;
         
 //        imageData = UIImagePNGRepresentation(canvas.image);
 //        [[NSUserDefaults standardUserDefaults] setObject:imageData forKey:fileNumberStr];
@@ -163,38 +166,41 @@
 //        filePath = [imageDir stringByAppendingPathComponent:componentName];
 //        imageData = UIImagePNGRepresentation(canvas.image);
 //        [imageData writeToFile:filePath atomically:YES];
-//        
+//
     
+    //[self.navigationController popViewControllerAnimated:YES];
 }
+
 
 -(NSMutableArray*)create
 {
+    canvas = [[Canvas alloc] init];
+    UIImage *image = [canvas createImage];
     //imageDirにはパスが入っている
     NSString *filePath;
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    
     //filenameの初期化
     [ud setInteger:fileNumber forKey:@"NUMBER"];
     fileNumber = [ud integerForKey:@"NUMBER"];
     [ud synchronize];
         
-    NSLog(@"filenimmmmm%d", fileNumber);
     componentName = [NSString stringWithFormat:@"image%d.png", fileNumber];
     fileNumberStr = [NSString stringWithFormat:@"%d", fileNumber];
-    
+        
     //  PNG保存
     filePath = [imageDir stringByAppendingPathComponent:componentName];
-    UIImage *image;
+    
     [[NSUserDefaults standardUserDefaults] setObject:imageData forKey:fileNumberStr];
     imageData = UIImagePNGRepresentation(image);
     [imageData writeToFile:filePath atomically:YES];
     [imageArray addObject:imageData];
-
+    
     fileNumber++;
     //プラスした数字を格納
     [ud setInteger:fileNumber forKey:@"NUMBER"];
-
     
     return imageArray;
+    
 }
 
 
@@ -276,15 +282,16 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (settingIndexPath.section == 0) {
+//        if (settingIndexPath.row == 1) {
+//            OpenTableView *openTableView = [[OpenTableView alloc] initWithStyle:UITableViewStylePlain];
+//            [self.navigationController pushViewController:openTableView animated:YES];
+//            NSLog(@"aaa");
+//        }
+//    }
+//}
+
 
 @end

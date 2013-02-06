@@ -24,6 +24,12 @@
     NSString* imageDir;
     NSData *imageData;
     NSMutableArray *imageArray;
+    NSString *title;
+    
+    NSUserDefaults *ud;
+    
+    NSMutableArray *stringArray;
+    
 }
 
 - (id)initWithStyle:(UITableViewStyle)style selectedIndexPath:(NSIndexPath *)selectedIndexPath;

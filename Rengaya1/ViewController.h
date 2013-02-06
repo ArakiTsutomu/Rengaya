@@ -12,10 +12,24 @@
 
 @interface ViewController : UIViewController
 {
+    //右向き戻るボタン
+    UIBarButtonItem *rewindButton;
+    //左向き進むボタン
+    UIBarButtonItem *fastForwardButton;
+    
     Save *save;
     Canvas *canvas;
     UIImage *image;
-    
+    NSMutableArray *imageArray;
+    NSData *imageData;
+    NSUserDefaults *ud;
+    int imageCount;
+    UIImage *canvasImage;
+    UIImageView *imageView;
+    UIImage *reimage;
+    int back;
+    int next;
+    UIImageView *animImageView;
 }
 
 @end

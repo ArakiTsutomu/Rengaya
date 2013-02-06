@@ -10,7 +10,6 @@
 
 @implementation Canvas
 @synthesize canvasImageView;
-
 -(id)init
 {
     if ([super init]) {
@@ -21,18 +20,71 @@
 
 -(void)createImageView
 {
+    lineContainer = [[NSMutableArray alloc] init];
+    
     canvasImageView = [[UIImageView alloc] init];
     canvasImageView.frame = CGRectMake(0, 0, 320, 420);
     [canvasImageView setBackgroundColor:[UIColor yellowColor]];
     [self addSubview:canvasImageView];
 }
 
+- (void)undoLine
+{
+    if ([lineContainer count] > 0) {
+        [lineContainer removeLastObject];
+        
+        canvasImageView.image = nil;
+        for (NSArray *requiredLine in lineContainer) {
+            
+            CGPoint startingPoint = [[requiredLine objectAtIndex:0] CGPointValue];
+            for (int i = 0; i < [requiredLine count]; i++) {
+                CGPoint endPoint = [[requiredLine objectAtIndex:i] CGPointValue];
+                
+                UIGraphicsBeginImageContext(canvasImageView.frame.size);
+                
+                [canvasImageView.image drawInRect:
+                 CGRectMake(0, 0, canvasImageView.frame.size.width, canvasImageView.frame.size.height)];
+                
+                //線の角を丸くする
+                CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
+                
+                //線の太さを指定
+                CGContextSetLineWidth(UIGraphicsGetCurrentContext(), 10.0);
+                
+                //線の色を指定(RGB)
+                CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), 0.0, 0.0, 0.0, 1.0);
+                
+                //線の描画開始座標をセット
+                CGContextMoveToPoint(UIGraphicsGetCurrentContext(), startingPoint.x, startingPoint.y);
+                
+                //線の終了座標をセット
+                CGContextAddLineToPoint(UIGraphicsGetCurrentContext(), endPoint.x, endPoint.y);
+                
+                //描画の開始〜終了座標まで線を引く
+                CGContextStrokePath(UIGraphicsGetCurrentContext());
+                
+                //描画領域を画像(UIImage)としてcanvasにセット
+                canvasImageView.image = UIGraphicsGetImageFromCurrentImageContext();
+                
+                //描画領域のクリア
+                UIGraphicsEndImageContext();
+                
+                startingPoint = endPoint;
+            }
+        }
+    }
+}
+
 //画面に指をタッチした時
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    line = [[NSMutableArray alloc] init];
+    
     //タッチ開始座標をインスタンス変数touchPointに保持
     UITouch *touch = [touches anyObject];
     touchPoint = [touch locationInView:canvasImageView];
+    
+    [line addObject:[NSValue valueWithCGPoint:touchPoint]];
 }
 
 
@@ -76,14 +128,21 @@
     
     //現在のタッチ座標を次の座標の開始座標にセット
     touchPoint = currentPoint;
+    
+    [line addObject:[NSValue valueWithCGPoint:touchPoint]];
 }
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [lineContainer addObject:line];
+}
 
 -(UIImage*)createImage
 {
-    UIImage *pngImage = canvasImageView.image;
-    NSLog(@"ppp%@", pngImage);
-    return pngImage;
+    return canvasImageView.image;
+    
 }
+
+
 
 @end

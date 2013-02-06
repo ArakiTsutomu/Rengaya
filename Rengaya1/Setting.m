@@ -7,6 +7,7 @@
 //
 
 #import "Setting.h"
+#import "OpenTableView.h"
 
 @interface Setting ()
 
@@ -55,7 +56,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 4;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -69,18 +70,12 @@
     // Configure the cell...
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            cell.textLabel.text = @"セクション0行0";
-        }else if(indexPath.row == 1){
             cell.textLabel.text = @"保存";
-        }else if (indexPath.row == 2){
+
+        }else if(indexPath.row == 1){
             cell.textLabel.text = @"開く";
         }
-//    }else if(indexPath.section == 1){
-//        if (indexPath.row == 0) {
-//            cell.textLabel.text = @"開く";
-//        }
     }
-   
     return cell;
 }
 
@@ -102,8 +97,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Save *save = [[Save alloc] initWithStyle:UITableViewStyleGrouped selectedIndexPath:(NSIndexPath *)indexPath];
-    [self.navigationController pushViewController:save animated:YES];
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            Save *save = [[Save alloc]
+                          initWithStyle:UITableViewStyleGrouped];
+            [self.navigationController pushViewController:save animated:YES];
+        }else if (indexPath.row == 1){
+            OpenTableView *openTableView = [[OpenTableView alloc]
+                                initWithStyle:UITableViewStylePlain];
+            [self.navigationController pushViewController:openTableView animated:YES];
+        }
+    }
 }
 
 @end
