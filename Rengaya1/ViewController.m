@@ -9,6 +9,9 @@
 #import "ViewController.h"
 #import "Setting.h"
 #import "HGPageScrollView.h"
+#import "Save.h"
+
+NSMutableArray *imageArray;
 
 @interface ViewController ()
 
@@ -18,15 +21,17 @@
 
 
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    ud = [NSUserDefaults standardUserDefaults];
+    if (ud == NULL) {
+        ud = [NSUserDefaults standardUserDefaults];
+    }
 
     [ud setInteger:0 forKey:@"COUNT"];
+    
     
     //画像をNSDataに変換して入れておくためのarray
     imageArray = [[NSMutableArray alloc] init];
@@ -75,7 +80,6 @@
     
     }
 
-
 -(void)buttonPushed:(UIBarButtonItem*)sender
 {
     if (sender.tag == 0) {
@@ -90,12 +94,10 @@
 //配列に入れてImageViewを足していく
 -(void)addView
 {
-    
+        
     if (canvas.canvasImageView.image != nil) {
         save = [[Save alloc] init];
-        [save create];
         image = [canvas createImage];
-        NSLog(@"image%@",image);
         
         imageData = UIImagePNGRepresentation(image);
         reimage = [UIImage imageWithData:imageData];
@@ -104,33 +106,91 @@
         [canvas createImageView];
         imageCount = [ud integerForKey:@"COUNT"];
         imageCount++;
+        
         [ud setInteger:[imageArray count] forKey:@"COUNT"];
-        [ud synchronize];
         NSLog(@"imagecountaddview:%d",imageCount);
         NSLog(@"imageArray:%d", [imageArray count]);
         
+        [ud setObject:imageData forKey:@"IMAGE"];
         
-    }  
+        [ud synchronize];
+        
+        
+        [save imageDataArray];
+    }
 }
+
+-(void)deleteImageArray
+{
+    NSLog(@"pre%@", imageArray);
+    [imageArray removeAllObjects];
+    NSLog(@"after%@", imageArray);
+}
+
+-(void)newDraw
+{
+    [self deleteImageArray];
+}
+
+
+//テスト消し
+//-(NSMutableArray*)imageArray
+//{
+//    return imageArray;
+//}
+
 
 -(void)animation
 {
-    if ([animImageView isAnimating]) {
-        [animImageView stopAnimating];
-        [animImageView removeFromSuperview];
+    [self makeAnimeArray];
+
+    NSLog(@"animmaaraycount%d", [animMArray count]);
+    if ([animMArray count] == 0) {
+        if ([animImageView isAnimating]) {
+            [animImageView stopAnimating];
+            [animImageView removeFromSuperview];
+        }else{
+            animImageView = [[UIImageView alloc] init];
+            animImageView.frame = self.view.bounds;
+            [self.view addSubview:animImageView];
+            
+            [animImageView setAnimationImages:imageArray];
+            
+            [animImageView setAnimationDuration:2.0];
+            [animImageView setAnimationRepeatCount:1];
+            [animImageView startAnimating];
+        }
     }else{
-        animImageView = [[UIImageView alloc] init];
-        animImageView.frame = self.view.bounds;
-        [self.view addSubview:animImageView];
-        
-        [animImageView setAnimationImages:imageArray];
-        
-        [animImageView setAnimationDuration:2.0];
-        [animImageView setAnimationRepeatCount:1];
-        [animImageView startAnimating];
+        [self deleteImageArray];
+        if ([animImageView isAnimating]) {
+            [animImageView stopAnimating];
+            [animImageView removeFromSuperview];
+        }else{
+            animImageView = [[UIImageView alloc] init];
+            animImageView.frame = self.view.bounds;
+            [self.view addSubview:animImageView];
+            
+            [animImageView setAnimationImages:animMArray];
+            
+            [animImageView setAnimationDuration:2.0];
+            [animImageView setAnimationRepeatCount:1];
+            [animImageView startAnimating];
+        }
     }
-    
 }
+
+-(void)makeAnimeArray
+{
+    animMArray = [[NSMutableArray alloc] init];
+    animArray = [ud objectForKey:@"ANIME"];
+    for (int i = 0; i < [animArray count]; i++) {
+        NSData *redata = [animArray objectAtIndex:i];
+        reimage = [UIImage imageWithData:redata];
+        [animMArray addObject:reimage];
+    }
+    NSLog(@"%@", animMArray);
+}
+
 
 -(void)nextImage
 {
@@ -171,6 +231,8 @@
         
 }
 
+
+//ここら辺も[list count]使う良さげ
 -(void)backImage
 {
 //    if (imageArray != nil && canvas.canvasImageView.image != nil) {
@@ -198,9 +260,9 @@
         imageCount--;
         NSLog(@"imageCount%d",imageCount);
         [canvas createImageView];
-        NSData *reData = [imageArray objectAtIndex:imageCount];
-        reimage = [UIImage imageWithData:reData];
-        [canvas.canvasImageView setImage:reimage];
+        NSData *arrayData = [imageArray objectAtIndex:imageCount];
+        UIImage *arrayImage = [UIImage imageWithData:arrayData];
+        [canvas.canvasImageView setImage:arrayImage];
     
 }
 

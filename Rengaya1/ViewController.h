@@ -20,7 +20,7 @@
     Save *save;
     Canvas *canvas;
     UIImage *image;
-    NSMutableArray *imageArray;
+//    NSMutableArray *imageArray;
     NSData *imageData;
     NSUserDefaults *ud;
     int imageCount;
@@ -30,6 +30,17 @@
     int back;
     int next;
     UIImageView *animImageView;
+    NSArray *animArray;
+    NSMutableArray *animMArray;
+    
+    Save *savevc;
+    
 }
+
+//-(NSMutableArray*)imageArray;
+-(void)deleteImageArray;
+-(void)newDraw;
+
+
 
 @end

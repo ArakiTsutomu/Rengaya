@@ -8,6 +8,7 @@
 
 #import "Setting.h"
 #import "OpenTableView.h"
+#import "ViewController.h"
 
 @interface Setting ()
 
@@ -56,7 +57,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -74,6 +75,8 @@
 
         }else if(indexPath.row == 1){
             cell.textLabel.text = @"開く";
+        }else if(indexPath.row == 2){
+            cell.textLabel.text = @"新規作成";
         }
     }
     return cell;
@@ -106,6 +109,14 @@
             OpenTableView *openTableView = [[OpenTableView alloc]
                                 initWithStyle:UITableViewStylePlain];
             [self.navigationController pushViewController:openTableView animated:YES];
+        }else if (indexPath.row == 2){
+            [self dismissViewControllerAnimated:YES completion:nil];
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            [ud removeObjectForKey:@"ANIME"];
+            
+            ViewController *viewc = [[ViewController alloc] init];
+            [viewc newDraw];
+            
         }
     }
 }

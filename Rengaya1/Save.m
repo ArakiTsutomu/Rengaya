@@ -10,6 +10,7 @@
 #import "Canvas.h"
 #import "Setting.h"
 #import "OpenTableView.h"
+#import "ViewController.h"
 
 @interface Save ()
 
@@ -125,8 +126,38 @@
     [[NSFileManager defaultManager] createDirectoryAtPath:imageDir withIntermediateDirectories:YES attributes:nil error:&error];
     
     
+    //imageDirにはパスが入っている
+    NSString *filePath;
+    //filenameの初期化
     
-    [self create];
+    array = [ud arrayForKey:@"DATAARRAY"];
+    for (int i = 0; i< [array count]; i++) {
+        componentName = [NSString stringWithFormat:@"image%d.png", i];
+        fileNumberStr = [NSString stringWithFormat:@"%d", [array count]];
+        
+        //  PNG保存
+        filePath = [imageDir stringByAppendingPathComponent:componentName];
+        imageData = [NSData dataWithData:[array objectAtIndex:i]];
+        [imageData writeToFile:filePath atomically:YES];
+//        fileNumber = [ud integerForKey:@"NUMBER"];
+//        fileNumber++;
+//        [ud setInteger:fileNumber forKey:@"NUMBER"];
+    }
+    [ud removeObjectForKey:@"DATAARRAY"];
+    //プラスした数字を格納
+    
+    NSLog(@"Filenumber%d", fileNumber);
+    
+    [ud synchronize];
+
+    
+    //保存した後はViewControllerのimageArrayを削除する
+    ViewController *viewC = [[ViewController alloc] init];
+    
+    [viewC deleteImageArray];
+    
+    //クリエイトしてる？とりあえず消しとくよ
+    //[self create];
     
 //    [stringArray addObject:title];
 //    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:stringArray.count inSection:0];
@@ -168,38 +199,47 @@
 //        [imageData writeToFile:filePath atomically:YES];
 //
     
-    //[self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 
--(NSMutableArray*)create
+
+-(void)imageDataArray
 {
-    canvas = [[Canvas alloc] init];
-    UIImage *image = [canvas createImage];
+    if (ud == NULL) {
+        ud = [NSUserDefaults standardUserDefaults];
+    }
+    imageMArray = [NSMutableArray array];
+    NSData *data = [ud objectForKey:@"IMAGE"];
+    array = [ud arrayForKey:@"DATAARRAY"];
+    [imageMArray addObjectsFromArray:array];
+    [imageMArray addObject:data];
+    [ud setObject:imageMArray forKey:@"DATAARRAY"];
+}
+
+-(void)create
+{
     //imageDirにはパスが入っている
     NSString *filePath;
     
     //filenameの初期化
     [ud setInteger:fileNumber forKey:@"NUMBER"];
     fileNumber = [ud integerForKey:@"NUMBER"];
-    [ud synchronize];
-        
     componentName = [NSString stringWithFormat:@"image%d.png", fileNumber];
     fileNumberStr = [NSString stringWithFormat:@"%d", fileNumber];
         
     //  PNG保存
     filePath = [imageDir stringByAppendingPathComponent:componentName];
     
-    [[NSUserDefaults standardUserDefaults] setObject:imageData forKey:fileNumberStr];
-    imageData = UIImagePNGRepresentation(image);
-    [imageData writeToFile:filePath atomically:YES];
-    [imageArray addObject:imageData];
-    
     fileNumber++;
     //プラスした数字を格納
     [ud setInteger:fileNumber forKey:@"NUMBER"];
     
-    return imageArray;
+    NSLog(@"Filenumber%d", fileNumber);
+    
+    [ud synchronize];
+
+    
     
 }
 

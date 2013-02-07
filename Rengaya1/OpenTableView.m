@@ -8,6 +8,7 @@
 
 #import "OpenTableView.h"
 #import "Save.h"
+#import "ViewController.h"
 
 @interface OpenTableView ()
 
@@ -33,11 +34,8 @@
         ud = [NSUserDefaults standardUserDefaults];
     }
     
+    //テキストフィールドに入力された@"TITLE"を開くセルに追加する
     stringArray = [NSMutableArray array];
-//    [stringArray addObject:@"こんにちは"];
-//    [stringArray addObject:@"今晩輪"];
-//    [ud setObject:stringArray forKey:@"ARRAY"];
-//    NSLog(@"string%@", [ud arrayForKey:@"ARRAY"]);
     array = [ud arrayForKey:@"ARRAY"];
     NSLog(@"array%@", stringArray);
     title = [ud objectForKey:@"TITLE"];
@@ -48,13 +46,6 @@
         [stringArray addObject:title];
         [ud setObject:stringArray forKey:@"ARRAY"];
     }
-    
-    NSLog(@"%@", [ud objectForKey:@"ARRAY"]);
-        
-    
-    
-    
-
             
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -87,7 +78,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
@@ -144,13 +135,58 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
+    NSLog(@"titletext%@", [stringArray objectAtIndex:indexPath.row]);
+//    
+    ud = [NSUserDefaults standardUserDefaults];
+    paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    documentsDirectory = [paths objectAtIndex:0];
+    
+    NSString *fileName = [NSString stringWithFormat:@"%@", [stringArray objectAtIndex:indexPath.row]];
+    
+    imageDir = [documentsDirectory stringByAppendingPathComponent:fileName];
+    
+    NSError *error = nil;
+    NSArray* list = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:imageDir error:&error];
+    
+    [ud removeObjectForKey:@"ANIME"];
+
+    for (int i = 0; i < [list count]; i++) {
+        NSString *number = [NSString stringWithFormat:@"image%d.png", i];
+        NSString *path = [imageDir stringByAppendingPathComponent:number];
+        NSFileManager *filemanager = [NSFileManager defaultManager];
+        BOOL success = [filemanager fileExistsAtPath:path];
+        if (success) {
+            animMArray = [[NSMutableArray alloc] init];
+            animArray = [ud arrayForKey:@"ANIME"];
+            redata = [[NSData alloc] initWithContentsOfFile:path];
+            reimage = [UIImage imageWithData:redata];
+            [animMArray addObjectsFromArray:animArray];
+            [animMArray addObject:redata];
+            [ud setObject:animMArray forKey:@"ANIME"];
+            
+        }
+    }
+
+        [self list];
     /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
+     TitleTextField.textのフォルダの中にaaaaというフォルダが出来る。
+     NSString *imageFir = [imageDir stringByAppendingPathComponent:@"aaaa"];
+     [[NSFileManager defaultManager] createDirectoryAtPath:imageFir withIntermediateDirectories:YES attributes:nil error:&error];
      */
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+}
+
+-(void)list
+{
+    NSError *error = nil;
+    NSArray* list = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:imageDir error:&error];
+    printf("list images\n");
+    for (NSString* name in list) {
+        printf("%s\n", [name UTF8String]);
+    }
+    NSLog(@"%d", [list count]);
 }
 
 @end

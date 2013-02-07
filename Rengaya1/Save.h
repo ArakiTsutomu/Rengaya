@@ -23,16 +23,18 @@
     NSString *fileDir;
     NSString* imageDir;
     NSData *imageData;
-    NSMutableArray *imageArray;
+    NSMutableArray *imageMArray;
     NSString *title;
     
     NSUserDefaults *ud;
     
     NSMutableArray *stringArray;
+    NSArray *array;
     
 }
 
 - (id)initWithStyle:(UITableViewStyle)style selectedIndexPath:(NSIndexPath *)selectedIndexPath;
--(NSMutableArray*)create;
+-(void)create;
+-(void)imageDataArray;
 //@property (nonatomic, strong) NSIndexPath *SettingIndexPath;
 @end

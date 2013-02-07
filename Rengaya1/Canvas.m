@@ -24,7 +24,6 @@
     
     canvasImageView = [[UIImageView alloc] init];
     canvasImageView.frame = CGRectMake(0, 0, 320, 420);
-    [canvasImageView setBackgroundColor:[UIColor yellowColor]];
     [self addSubview:canvasImageView];
 }
 
