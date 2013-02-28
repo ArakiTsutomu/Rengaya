@@ -10,4 +10,8 @@
 
 @interface SharedData : NSObject
 
++ (id)instance;
+- (void)setData:(id)anObject forKey:(id) aKey;
+- (id)getDataForKey:(id)aKey;
+
 @end

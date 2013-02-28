@@ -10,10 +10,13 @@
 
 @implementation Canvas
 @synthesize canvasImageView;
+
 -(id)init
 {
     if ([super init]) {
         [self createImageView];
+        ud = [NSUserDefaults standardUserDefaults];
+        
     }
     return self;
 }
@@ -21,9 +24,9 @@
 -(void)createImageView
 {
     lineContainer = [[NSMutableArray alloc] init];
-    
     canvasImageView = [[UIImageView alloc] init];
-    canvasImageView.frame = CGRectMake(0, 0, 320, 420);
+//    canvasImageView.contentMode = UIViewContentModeScaleAspectFit;
+    canvasImageView.frame = CGRectMake(0, 44, 320, 377);
     [self addSubview:canvasImageView];
 }
 
@@ -105,10 +108,13 @@
     CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);
     
     //線の太さを指定
-    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), 10.0);
+    CGContextSetLineWidth(UIGraphicsGetCurrentContext(), [ud floatForKey:@"PENLINEWEIGHT"]);
     
     //線の色を指定(RGB)
-    CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), 0.0, 0.0, 0.0, 1.0);
+    CGContextSetRGBStrokeColor(UIGraphicsGetCurrentContext(), [ud floatForKey:@"RED"],
+                                                              [ud floatForKey:@"GREEN"],
+                                                              [ud floatForKey:@"BLUE"],
+                                                              1.0);
     
     //線の描画開始座標をセット
     CGContextMoveToPoint(UIGraphicsGetCurrentContext(), touchPoint.x, touchPoint.y);
@@ -131,6 +137,10 @@
     [line addObject:[NSValue valueWithCGPoint:touchPoint]];
 }
 
+-(void)getcolor
+{
+}
+
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [lineContainer addObject:line];
@@ -141,7 +151,6 @@
     return canvasImageView.image;
     
 }
-
-
-
+                                     
+                                     
 @end

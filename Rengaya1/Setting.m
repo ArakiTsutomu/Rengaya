@@ -102,23 +102,71 @@
 {
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            Save *save = [[Save alloc]
-                          initWithStyle:UITableViewStyleGrouped];
-            [self.navigationController pushViewController:save animated:YES];
+            ud = [NSUserDefaults standardUserDefaults];
+            NSString *titleCheck;
+            titleCheck = [ud objectForKey:@"GETTITLE"];
+            NSLog(@"TITL%@",titleCheck);
+            if (titleCheck == NULL){
+                Save *save = [[Save alloc]
+                              initWithStyle:UITableViewStyleGrouped];
+                [self.navigationController pushViewController:save animated:YES];
+            }else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                                message:@"新規作成をしてから保存してください"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
         }else if (indexPath.row == 1){
             OpenTableView *openTableView = [[OpenTableView alloc]
                                 initWithStyle:UITableViewStylePlain];
             [self.navigationController pushViewController:openTableView animated:YES];
         }else if (indexPath.row == 2){
-            [self dismissViewControllerAnimated:YES completion:nil];
-            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            ud = [NSUserDefaults standardUserDefaults];
             [ud removeObjectForKey:@"ANIME"];
+            [ud removeObjectForKey:@"PREVIEW"];
+            [ud removeObjectForKey:@"DIRECTRY"];
+            [ud removeObjectForKey:@"GETTITLE"];
             
-            ViewController *viewc = [[ViewController alloc] init];
-            [viewc newDraw];
+            [ud synchronize];
+            ViewController *viewC = [[ViewController alloc] init];
+            [viewC deleteImageArray];
             
+            [self dismissViewControllerAnimated:YES completion:nil];
+
         }
     }
 }
+
+
+
+//-(void)list
+//{
+//    
+//    //今入っているフォルダの名前やimageの数を得る
+//    ud = [NSUserDefaults standardUserDefaults];
+//    paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    documentsDirectory = [paths objectAtIndex:0];
+//    
+//    title = [ud objectForKey:@"DIRECTRY"];
+//    NSLog(@"directrytitile%@", title);
+//    
+//    NSString *fileName = [NSString stringWithFormat:@"%@",title];
+//    
+//    imageDir = [documentsDirectory stringByAppendingPathComponent:fileName];
+//    
+//    NSError *error = nil;
+//    NSArray* list = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:imageDir error:&error];
+//    printf("list images\n");
+//    for (NSString* name in list) {
+//        printf("%s\n", [name UTF8String]);
+//    }
+//    NSLog(@"listcount%d", [list count] - 2);
+//    //ここまで 今入っているフォルダの名前やimageの数を得る
+//    
+//}
+
+
 
 @end

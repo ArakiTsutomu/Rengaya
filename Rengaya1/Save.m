@@ -107,10 +107,14 @@
 
 -(void)save
 {
+    ud = [NSUserDefaults standardUserDefaults];
+
+    NSString *titleCheck;
+    titleCheck = [ud objectForKey:@"GETTITLE"];
+    if (titleCheck == NULL){
     NSString *titleStr = titleTextField.text;
     filename = [NSString stringWithFormat:@"%@",titleStr];
     
-    ud = [NSUserDefaults standardUserDefaults];
     [ud setObject:filename forKey:@"TITLE"];
     title = [ud stringForKey:@"TITLE"];
     
@@ -125,12 +129,11 @@
     //  Documets/imagesディレクトリ作成。2回目以降は意味の無い作業。
     [[NSFileManager defaultManager] createDirectoryAtPath:imageDir withIntermediateDirectories:YES attributes:nil error:&error];
     
-    
     //imageDirにはパスが入っている
     NSString *filePath;
     //filenameの初期化
     
-    array = [ud arrayForKey:@"DATAARRAY"];
+    array = [ud arrayForKey:@"PREVIEW"];
     for (int i = 0; i< [array count]; i++) {
         componentName = [NSString stringWithFormat:@"image%d.png", i];
         fileNumberStr = [NSString stringWithFormat:@"%d", [array count]];
@@ -143,9 +146,8 @@
 //        fileNumber++;
 //        [ud setInteger:fileNumber forKey:@"NUMBER"];
     }
-    [ud removeObjectForKey:@"DATAARRAY"];
-    //プラスした数字を格納
     
+    [ud removeObjectForKey:@"PREVIEW"];
     NSLog(@"Filenumber%d", fileNumber);
     
     [ud synchronize];
@@ -155,7 +157,16 @@
     ViewController *viewC = [[ViewController alloc] init];
     
     [viewC deleteImageArray];
-    
+    [self.navigationController popViewControllerAnimated:YES];
+
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                              message:@"新規作成をしてから保存してください"
+                                              delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
     //クリエイトしてる？とりあえず消しとくよ
     //[self create];
     
@@ -199,7 +210,6 @@
 //        [imageData writeToFile:filePath atomically:YES];
 //
     
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 
@@ -209,12 +219,14 @@
     if (ud == NULL) {
         ud = [NSUserDefaults standardUserDefaults];
     }
+    
     imageMArray = [NSMutableArray array];
     NSData *data = [ud objectForKey:@"IMAGE"];
-    array = [ud arrayForKey:@"DATAARRAY"];
+    array = [ud arrayForKey:@"PREVIEW"];
     [imageMArray addObjectsFromArray:array];
     [imageMArray addObject:data];
-    [ud setObject:imageMArray forKey:@"DATAARRAY"];
+    [ud setObject:imageMArray forKey:@"PREVIEW"];
+    
 }
 
 -(void)create
@@ -227,7 +239,7 @@
     fileNumber = [ud integerForKey:@"NUMBER"];
     componentName = [NSString stringWithFormat:@"image%d.png", fileNumber];
     fileNumberStr = [NSString stringWithFormat:@"%d", fileNumber];
-        
+    
     //  PNG保存
     filePath = [imageDir stringByAppendingPathComponent:componentName];
     
@@ -238,9 +250,6 @@
     NSLog(@"Filenumber%d", fileNumber);
     
     [ud synchronize];
-
-    
-    
 }
 
 

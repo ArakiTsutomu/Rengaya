@@ -7,7 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Canvas.h"
 
 @interface PenViewSetting : UIView
-
+{
+    NSUserDefaults *ud;
+    UIColor *backColor;
+    int penFlg;
+    UISlider *penSlider;
+    int penNum;
+    Canvas *canvas;
+    
+    int tag1;
+    int tag2;
+    
+    UIView *bt1;
+    UIView *bt2;
+    
+    UIColor *penColor;
+    
+}
 @end

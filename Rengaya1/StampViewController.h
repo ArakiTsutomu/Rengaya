@@ -9,5 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface StampViewController : UIViewController
+{
+    NSUserDefaults *ud;
+    NSArray *stampArray;
+    NSMutableArray *stampMArray;
+    UIImageView *imageView;
+    int tag;
+}
+
+@property NSMutableArray *stampMArray;
+
 
 @end

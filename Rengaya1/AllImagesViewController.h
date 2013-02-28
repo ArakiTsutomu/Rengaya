@@ -9,5 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface AllImagesViewController : UIViewController
+{
+    NSArray *checkArray;
+    UIImageView *imageView;
+    UIImage *image;
+    NSArray *animArray;
+    NSUserDefaults *ud;
+}
 
 @end

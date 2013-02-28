@@ -12,8 +12,15 @@
 @interface Setting : UITableViewController<UITableViewDataSource, UITableViewDelegate>
 {
     int indexPathFlg;
+    
+    NSUserDefaults *ud;
+    NSArray *paths;
+    NSString *documentsDirectory;
+    NSString *filePath;
+    NSString *imageDir;
 }
 
 @property int indexPathFlg;
+
  
 @end

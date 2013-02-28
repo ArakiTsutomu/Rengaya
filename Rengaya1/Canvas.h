@@ -10,11 +10,14 @@
 
 @interface Canvas : UIView
 {
+    NSUserDefaults *ud;
+    
     UIImageView *canvasImageView;
     CGPoint touchPoint;
     
     NSMutableArray *lineContainer;
     NSMutableArray *line;
+    float penLineWeight;
 }
 
 

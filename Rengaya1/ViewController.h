@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "Canvas.h"
 #import "Save.h"
+#import "PenViewSetting.h"
+#import "StampViewController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<NSObject>
 {
     //右向き戻るボタン
     UIBarButtonItem *rewindButton;
@@ -35,11 +37,43 @@
     
     Save *savevc;
     
+    NSArray *paths;
+    NSString *documentsDirectory;
+    NSString *filePath;
+    NSString *imageDir;
+    
+    NSArray *list;
+    NSString *title;
+    
+    NSData *nextData;
+    
+    NSMutableArray *addAfterMArray;
+    NSString *componentName;
+
+    UILabel *titleLabel;
+    
+    PenViewSetting *penSetting;
+    
+    int penFlg;
+    
+    UIToolbar *bottomToolBar;
+    
+    StampViewController *stampViewC;
+    NSData *stampData;
+    UIImage *stamp;
+    UIImageView *stampImageView;
+    
+    UIImage *composeImage;
 }
 
-//-(NSMutableArray*)imageArray;
+
++(NSMutableArray*)getImageArray;
 -(void)deleteImageArray;
 -(void)newDraw;
+-(void)createLabel;
+-(void)deleteTitle;
+-(void)putStamp;
+
 
 
 
